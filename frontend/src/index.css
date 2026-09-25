@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * Sistema de temas SIN librerias (spec 01-loginv2).
+ *
+ * Mecanismo:
+ *  - Los colores tematizados son CSS custom properties.
+ *  - `:root` define el tema CLARO por defecto.
+ *  - `@media (prefers-color-scheme: dark)` aplica el tema OSCURO cuando lo
+ *    pide el sistema, salvo que el usuario haya forzado claro
+ *    (`:root[data-theme="light"]`).
+ *  - `:root[data-theme="dark"]` / `:root[data-theme="light"]` permiten el
+ *    override MANUAL desde el toggle de la UI, en ambas direcciones.
+ *
+ * Los componentes consumen estas variables a traves de Tailwind
+ * (`tailwind.config.js` mapea `colors: { bg: 'var(--color-bg)', ... }`),
+ * asi se escribe `bg-bg text-text` sin CSS suelto por componente.
+ */
+
+/* ---- Tema CLARO (default del proyecto) ---- */
+:root {
+  color-scheme: light;
+
+  --color-bg: #f1f5f9;
+  --color-surface: #ffffff;
+  --color-text: #1e293b;
+  --color-text-muted: #64748b;
+  --color-border: #cbd5e1;
+
+  --color-primary: #4f46e5;
+  --color-primary-hover: #4338ca;
+  --color-primary-text: #ffffff;
+
+  --color-ring: #6366f1;
+
+  --color-error-text: #b91c1c;
+  --color-error-bg: #fef2f2;
+  --color-error-border: #fecaca;
+
+  --color-success-text: #16a34a;
+  --color-success-bg: #dcfce7;
+}
+
+/* ---- Tema OSCURO segun el sistema (sin override manual a claro) ---- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --color-bg: #0f172a;
+    --color-surface: #1e293b;
+    --color-text: #e2e8f0;
+    --color-text-muted: #94a3b8;
+    --color-border: #334155;
+
+    --color-primary: #6366f1;
+    --color-primary-hover: #818cf8;
+    --color-primary-text: #ffffff;
+
+    --color-ring: #818cf8;
+
+    --color-error-text: #fca5a5;
+    --color-error-bg: #450a0a;
+    --color-error-border: #7f1d1d;
+
+    --color-success-text: #4ade80;
+    --color-success-bg: #052e16;
+  }
+}
+
+/* ---- Override MANUAL: forzar OSCURO desde el toggle ---- */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-bg: #0f172a;
+  --color-surface: #1e293b;
+  --color-text: #e2e8f0;
+  --color-text-muted: #94a3b8;
+  --color-border: #334155;
+
+  --color-primary: #6366f1;
+  --color-primary-hover: #818cf8;
+  --color-primary-text: #ffffff;
+
+  --color-ring: #818cf8;
+
+  --color-error-text: #fca5a5;
+  --color-error-bg: #450a0a;
+  --color-error-border: #7f1d1d;
+
+  --color-success-text: #4ade80;
+  --color-success-bg: #052e16;
+}
+
+/* ---- Override MANUAL: forzar CLARO desde el toggle ---- */
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --color-bg: #f1f5f9;
+  --color-surface: #ffffff;
+  --color-text: #1e293b;
+  --color-text-muted: #64748b;
+  --color-border: #cbd5e1;
+
+  --color-primary: #4f46e5;
+  --color-primary-hover: #4338ca;
+  --color-primary-text: #ffffff;
+
+  --color-ring: #6366f1;
+
+  --color-error-text: #b91c1c;
+  --color-error-bg: #fef2f2;
+  --color-error-border: #fecaca;
+
+  --color-success-text: #16a34a;
+  --color-success-bg: #dcfce7;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+  }
+}

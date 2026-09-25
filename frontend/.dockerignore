@@ -1,0 +1,27 @@
+# Dependencias y artefactos: se regeneran dentro del build.
+node_modules
+dist
+dist-ssr
+
+# Tests: no participan del build de produccion.
+tests
+**/*.test.js
+**/*.test.jsx
+
+# Entornos locales y secrets: nunca entran al contexto de build.
+.env
+.env.*
+*.local
+
+# Metadatos de repo / editor.
+.git
+.gitignore
+.vscode
+.idea
+.DS_Store
+
+# Docker y docs: no son insumo del build.
+Dockerfile
+.dockerignore
+README.md
+npm-debug.log*

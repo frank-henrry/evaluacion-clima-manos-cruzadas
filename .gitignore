@@ -1,0 +1,12 @@
+# Secretos y configuración local
+.env
+backend/.env
+frontend/.env
+
+# Dependencias y artefactos
+node_modules/
+dist/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+

@@ -1,0 +1,30 @@
+# Entornos locales y secrets: nunca entran al contexto de build ni a la imagen.
+.env
+.env.*
+*.local
+
+# Cache / artefactos de Python: se regeneran dentro de la imagen.
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtualenvs: las deps se instalan con pip dentro del build.
+.venv/
+venv/
+
+# Metadatos de repo / editor.
+.git
+.gitignore
+.vscode
+.idea
+.DS_Store
+
+# Docker y docs: no son insumo del build.
+Dockerfile
+.dockerignore
+README.md
