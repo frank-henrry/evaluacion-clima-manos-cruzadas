@@ -1,4 +1,4 @@
-"""Cliente asincrono y saneado para WeatherAPI current.json."""
+"""Cliente asincrono y saneado para WeatherAPI current.json y forecast.json."""
 
 import httpx
 from pydantic import ValidationError
@@ -9,6 +9,7 @@ from app.core.exceptions import (
     WeatherProviderResponseError,
     WeatherProviderUnavailableError,
 )
+from app.models.prediccion import WeatherApiForecastResponse
 from app.models.weather import WeatherApiResponse
 
 _LOCATION_NOT_FOUND_CODE = 1006
@@ -50,6 +51,45 @@ class WeatherApiClient:
 
         try:
             return WeatherApiResponse.model_validate(response.json())
+        except (ValueError, ValidationError) as exc:
+            raise WeatherProviderResponseError from exc
+
+    async def fetch_forecast(
+        self, location: str, days: int
+    ) -> WeatherApiForecastResponse:
+        """Pronostico diario de `days` dias (hoy incluido) para `location`.
+
+        Mismo manejo de errores que `get_current`: solo lanza excepciones de
+        dominio (`WeatherError`) y nunca expone la key ni el mensaje externo.
+        """
+        if not self._api_key:
+            raise WeatherProviderUnavailableError
+
+        try:
+            async with httpx.AsyncClient(
+                base_url=self._base_url,
+                timeout=self._timeout,
+                transport=self._transport,
+            ) as client:
+                response = await client.get(
+                    "/forecast.json",
+                    params={
+                        "key": self._api_key,
+                        "q": location,
+                        "days": days,
+                        "lang": "es",
+                    },
+                )
+        except httpx.RequestError as exc:
+            raise WeatherProviderUnavailableError from exc
+
+        if response.status_code >= 400:
+            if self._provider_error_code(response) == _LOCATION_NOT_FOUND_CODE:
+                raise LocationNotFoundError
+            raise WeatherProviderUnavailableError
+
+        try:
+            return WeatherApiForecastResponse.model_validate(response.json())
         except (ValueError, ValidationError) as exc:
             raise WeatherProviderResponseError from exc
 

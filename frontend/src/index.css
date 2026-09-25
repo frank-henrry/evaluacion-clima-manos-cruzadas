@@ -41,6 +41,14 @@
 
   --color-success-text: #16a34a;
   --color-success-bg: #dcfce7;
+
+  /* Planificador (spec 08): superficies secundarias, acento y badges. */
+  --color-surface-muted: #f8fafc;
+  --color-accent: #d97706;
+  --color-accent-soft: #fef3c7;
+  --color-accent-text: #92400e;
+  --color-primary-soft: #eef2ff;
+  --color-primary-soft-text: #4338ca;
 }
 
 /* ---- Tema OSCURO segun el sistema (sin override manual a claro) ---- */
@@ -66,6 +74,13 @@
 
     --color-success-text: #4ade80;
     --color-success-bg: #052e16;
+
+    --color-surface-muted: #162032;
+    --color-accent: #fbbf24;
+    --color-accent-soft: #422006;
+    --color-accent-text: #fcd34d;
+    --color-primary-soft: #312e81;
+    --color-primary-soft-text: #c7d2fe;
   }
 }
 
@@ -91,6 +106,13 @@
 
   --color-success-text: #4ade80;
   --color-success-bg: #052e16;
+
+  --color-surface-muted: #162032;
+  --color-accent: #fbbf24;
+  --color-accent-soft: #422006;
+  --color-accent-text: #fcd34d;
+  --color-primary-soft: #312e81;
+  --color-primary-soft-text: #c7d2fe;
 }
 
 /* ---- Override MANUAL: forzar CLARO desde el toggle ---- */
@@ -115,6 +137,14 @@
 
   --color-success-text: #16a34a;
   --color-success-bg: #dcfce7;
+
+  /* Planificador (spec 08): superficies secundarias, acento y badges. */
+  --color-surface-muted: #f8fafc;
+  --color-accent: #d97706;
+  --color-accent-soft: #fef3c7;
+  --color-accent-text: #92400e;
+  --color-primary-soft: #eef2ff;
+  --color-primary-soft-text: #4338ca;
 }
 
 @layer base {

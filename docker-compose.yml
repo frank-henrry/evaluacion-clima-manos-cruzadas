@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:16-alpine
-    container_name: practica-1-db
+    container_name: practica-2-db
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-practica}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-practica}
@@ -26,8 +26,8 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    image: practica-1-backend:latest
-    container_name: practica-1-backend
+    image: practica-2-backend:latest
+    container_name: practica-2-backend
     environment:
       # Se habla con la db por nombre de servicio ("db"), no localhost.
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-practica}:${POSTGRES_PASSWORD:-practica}@db:5432/${POSTGRES_DB:-practica}
@@ -40,6 +40,20 @@ services:
       WEATHER_API_KEY: ${WEATHER_API_KEY:-}
       WEATHER_API_BASE_URL: ${WEATHER_API_BASE_URL:-https://api.weatherapi.com/v1}
       WEATHER_API_TIMEOUT_SECONDS: ${WEATHER_API_TIMEOUT_SECONDS:-5}
+      # Dias hacia adelante cubiertos por el pronostico (forecast.json).
+      WEATHER_FORECAST_MAX_DAYS: ${WEATHER_FORECAST_MAX_DAYS:-3}
+      # Prediccion de visitantes: ubicacion fija del pronostico y lugar a predecir.
+      PREDICCION_UBICACION: "${PREDICCION_UBICACION:-Huanuco, Peru}"
+      PREDICCION_LUGAR_CODIGO: ${PREDICCION_LUGAR_CODIGO:-manos-cruzadas}
+      # RAG de historicos: minimo para cortar el nivel de coincidencia y tope de filas.
+      RAG_MIN_RESULTADOS: ${RAG_MIN_RESULTADOS:-5}
+      RAG_MAX_RESULTADOS: ${RAG_MAX_RESULTADOS:-10}
+      # OpenAI (agente analista) se consume exclusivamente desde el backend.
+      # Sin key el analista queda no disponible; NUNCA hardcodeada.
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
+      OPENAI_TIMEOUT_SECONDS: ${OPENAI_TIMEOUT_SECONDS:-20}
+      OPENAI_TEMPERATURE: ${OPENAI_TEMPERATURE:-0.2}
     ports:
       # DEBE publicarse al host: el navegador llama a http://localhost:8000
       # directamente (VITE_API_URL embebido en el bundle del frontend).
@@ -57,8 +71,8 @@ services:
         # Vite embebe las VITE_* en tiempo de build. Se toma de .env o del entorno;
         # nunca hardcodeado en el Dockerfile ni en la imagen.
         VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
-    image: practica-1-frontend:latest
-    container_name: practica-1-frontend
+    image: practica-2-frontend:latest
+    container_name: practica-2-frontend
     ports:
       # Unico puerto pensado para acceso externo del usuario final -> host:contenedor.
       # nginx escucha en 80 dentro del contenedor.

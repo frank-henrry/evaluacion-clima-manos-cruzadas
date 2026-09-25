@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import auth, health, weather
+from app.api import auth, health, prediccion, visitas, weather
 from app.core.config import get_settings
 from app.db.models import Base
 from app.db.session import engine
@@ -15,6 +15,8 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(levelname)s %(name)s: %(message)s",
 )
+# En INFO, httpx loggea la URL completa, que incluye `?key=` de WeatherAPI.
+logging.getLogger("httpx").setLevel(logging.WARNING)
 logger = logging.getLogger("app")
 
 settings = get_settings()
@@ -44,3 +46,5 @@ app.add_middleware(
 app.include_router(health.router)
 app.include_router(auth.router)
 app.include_router(weather.router)
+app.include_router(prediccion.router)
+app.include_router(visitas.router)

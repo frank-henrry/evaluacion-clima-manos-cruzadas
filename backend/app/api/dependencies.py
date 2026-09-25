@@ -6,10 +6,14 @@ from typing import Annotated
 from fastapi import Depends, HTTPException, Query, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import get_settings
 from app.core.security import decode_access_token
+from app.db.session import get_session
 from app.integrations.weather_api import WeatherApiClient
+from app.services.prediccion.orquestador import Orquestador
+from app.services.visitas_service import VisitasService
 from app.services.weather_service import WeatherService
 
 _bearer_scheme = HTTPBearer(auto_error=False)
@@ -52,3 +56,16 @@ async def validated_location(
 
 async def get_weather_service() -> WeatherService:
     return WeatherService(WeatherApiClient(get_settings()))
+
+
+async def get_orquestador(
+    session: Annotated[AsyncSession, Depends(get_session)],
+) -> Orquestador:
+    settings = get_settings()
+    return Orquestador(session, WeatherApiClient(settings), settings=settings)
+
+
+async def get_visitas_service(
+    session: Annotated[AsyncSession, Depends(get_session)],
+) -> VisitasService:
+    return VisitasService(session, settings=get_settings())

@@ -37,6 +37,27 @@ class Settings(BaseSettings):
     weather_api_base_url: str = "https://api.weatherapi.com/v1"
     weather_api_timeout_seconds: float = Field(default=5.0, gt=0)
 
+    # Prediccion (SPEC 04): dias de pronostico real que se consultan; fuera de
+    # ese rango se usa el clima tipico del mes segun los historicos.
+    weather_forecast_max_days: int = Field(default=3, ge=1)
+    # Ubicacion fija del pronostico (Las Manos Cruzadas); nunca viene del usuario.
+    prediccion_ubicacion: str = "Huanuco, Peru"
+    # Codigo del lugar turistico en `lugar_turistico` (se busca por codigo, no por id).
+    prediccion_lugar_codigo: str = "manos-cruzadas"
+
+    # RAG de historicos (SPEC 05): minimo de dias similares para aceptar un
+    # nivel de coincidencia y maximo de filas recuperadas por consulta.
+    rag_min_resultados: int = Field(default=5, ge=1)
+    rag_max_resultados: int = Field(default=10, ge=1)
+
+    # Agente Analista (SPEC 06). La key vacia se traduce en
+    # `AnalistaNoDisponibleError` sin llamar a OpenAI. El modelo se toma de
+    # `OPENAI_MODEL`; el default solo aplica si la variable no esta definida.
+    openai_api_key: SecretStr = SecretStr("")
+    openai_model: str = "gpt-4o-mini"
+    openai_timeout_seconds: float = Field(default=20.0, gt=0)
+    openai_temperature: float = Field(default=0.2, ge=0, le=2)
+
     @property
     def cors_origins_list(self) -> list[str]:
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
